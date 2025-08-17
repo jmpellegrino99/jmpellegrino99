@@ -3,7 +3,6 @@
 <head>
     <title>Playfair Cipher</title>
     <style>
-
         ::selection {
             background-color: yellow;
         }
@@ -21,6 +20,28 @@
         body {
             font-family: Verdana;
             background-color: rgb(231, 248, 223);
+            margin: 0;
+            display: flex;              /* enables side-by-side layout */
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .gif-container {
+            width: 300px;              /* adjust size as needed */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
         }
 
         h5 {
@@ -60,29 +81,41 @@
             text-align: center;
             word-wrap: break-word;
         }
-        
     </style>
 </head>
 <body>
 
-<h2>Playfair Cipher Encoder/Decoder</h2>
+<div class="main-content">
+    <h2>Playfair Cipher Encoder/Decoder</h2>
 
-<h5>Welcome! Please use the box below to encrypt or decrypt a message using a Playfair cipher:</h5>
+    <h5>Welcome! Please use the box below to encrypt or decrypt a message using a Playfair cipher:</h5>
 
-<form id="enterValues">
-    <label for="encrypt">Check to encrypt, uncheck to decrypt:</label>
-    <input type="checkbox" id="encrypt" checked>
-    <br>
-    <label for="key">Enter a 5-letter key:</label>
-    <input type="text" id="key" name="key">
-    <br>
-    <label for="message">Enter a message:</label>
-    <input type="text" id="message" name="message">
-    <br>
-    <input type="submit" value="Submit">
-</form>
+    <form id="enterValues">
+        <label for="encrypt">Check to encrypt, uncheck to decrypt:</label>
+        <input type="checkbox" id="encrypt" checked>
+        <br>
+        <label for="key">Enter a 5-letter key:</label>
+        <input type="text" id="key" name="key">
+        <br>
+        <label for="message">Enter a message:</label>
+        <input type="text" id="message" name="message">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
 
-<p id = "outputResult"></p>
+    <p id="outputResult"></p>
+
+    <button id="fresh" onclick=refresh()>Refresh</button>
+
+    <foooter>
+        <p>&copy; auctor I. M. Peregrinus fuit, anno MMXXV Domini</p>
+    </foooter>
+</div>
+
+<!-- Right-side GIF -->
+<div class="gif-container">
+    <img src="play_this.gif" alt="Looping GIF">
+</div>
 
 <script>
     const checkbox = document.getElementById("encrypt");
@@ -101,22 +134,22 @@
 document.getElementById("enterValues").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the default form submission
     function checkWord(word) {
-    if (word.length !== 5) {
-        return true; // Word is not five letters long
-    }
-    for (let i = 0; i < word.length; i++) {
-        if (word.indexOf(word[i]) !== word.lastIndexOf(word[i])) {
-        return true; // Word has a repeated character
+        if (word.length !== 5) {
+            return true; // Word is not five letters long
         }
-    }
-    return false; // Word does not have repeated characters
+        for (let i = 0; i < word.length; i++) {
+            if (word.indexOf(word[i]) !== word.lastIndexOf(word[i])) {
+                return true; // Word has a repeated character
+            }
+        }
+        return false; // Word does not have repeated characters
     }
 
     var key = document.getElementById("key").value;
 
     if (checkWord(key)) {
-    alert('Pleasure ensure that the key has five distinct characters. Refreshing the page!');
-    location.reload();
+        alert('Please ensure that the key has five distinct characters. Refreshing the page!');
+        location.reload();
     } 
 
     var message = document.getElementById("message").value;
@@ -214,8 +247,8 @@ document.getElementById("enterValues").addEventListener("submit", function(event
     }
 
     function finalReturn() {
-    const newMessage = resultPairList.join("");
-    return(newMessage)
+        const newMessage = resultPairList.join("");
+        return(newMessage)
     }
 
     if (message.length === 0 || key.length === 0) {
@@ -239,12 +272,6 @@ document.getElementById("enterValues").addEventListener("submit", function(event
     }
 </script>
 
-<button id="fresh" onclick=refresh()>Refresh</button>
-
-<foooter>
-    <p>&copy; auctor I. M. Peregrinus fuit, anno MMXXV Domini</p>
-</foooter>
-
 </body>
-
 </html>
+
