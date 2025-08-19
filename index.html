@@ -21,18 +21,22 @@
             font-family: Verdana;
             background-color: rgb(231, 248, 223);
             margin: 0;
-            display: flex;              /* enables side-by-side layout */
+            display: flex;              
             justify-content: space-between;
             min-height: 100vh;
+            flex-direction: row;
         }
 
         .main-content {
             flex: 1;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .gif-container {
-            width: 300px;              /* adjust size as needed */
+            width: 300px;              
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -60,11 +64,20 @@
             background-color: rgb(246, 242, 242);
         }
 
+        .bottom-images {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bottom-images img {
+            width: 150px;    /* adjust as needed */
+            margin: 10px;
+            border: 2px solid black;
+        }
+
         footer {
             background-color: white;
             padding: 10px;
-            position: absolute;
-            bottom: 0;
             width: 100%;
             text-align: center;
         }
@@ -86,30 +99,39 @@
 <body>
 
 <div class="main-content">
-    <h2>Playfair Cipher Encoder/Decoder</h2>
+    <div>
+        <h2>Playfair Cipher Encoder/Decoder</h2>
 
-    <h5>Welcome! Please use the box below to encrypt or decrypt a message using a Playfair cipher:</h5>
+        <h5>Welcome! Please use the box below to encrypt or decrypt a message using a Playfair cipher:</h5>
 
-    <form id="enterValues">
-        <label for="encrypt">Check to encrypt, uncheck to decrypt:</label>
-        <input type="checkbox" id="encrypt" checked>
-        <br>
-        <label for="key">Enter a 5-letter key:</label>
-        <input type="text" id="key" name="key">
-        <br>
-        <label for="message">Enter a message:</label>
-        <input type="text" id="message" name="message">
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+        <form id="enterValues">
+            <label for="encrypt">Check to encrypt, uncheck to decrypt:</label>
+            <input type="checkbox" id="encrypt" checked>
+            <br>
+            <label for="key">Enter a 5-letter key:</label>
+            <input type="text" id="key" name="key">
+            <br>
+            <label for="message">Enter a message:</label>
+            <input type="text" id="message" name="message">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
 
-    <p id="outputResult"></p>
+        <p id="outputResult"></p>
 
-    <button id="fresh" onclick=refresh()>Refresh</button>
+        <button id="fresh" onclick=refresh()>Refresh</button>
+    </div>
 
-    <foooter>
+    <!-- Image section -->
+    <div class="bottom-images">
+        <img src="image1.jpg" alt="Image 1">
+        <img src="image2.jpg" alt="Image 2">
+        <img src="image3.jpg" alt="Image 3">
+    </div>
+
+    <footer>
         <p>&copy; auctor I. M. Peregrinus fuit, anno MMXXV Domini</p>
-    </foooter>
+    </footer>
 </div>
 
 <!-- Right-side GIF -->
@@ -119,30 +141,26 @@
 
 <script>
     const checkbox = document.getElementById("encrypt");
-    let encrypt = 1
+    let encrypt = 1;
 
     checkbox.addEventListener("change", function() {
-        if (this.checked) {
-            encrypt = 1
-        } else {
-            encrypt = -1
-        }
+        encrypt = this.checked ? 1 : -1;
     });
 </script>
 
 <script>
 document.getElementById("enterValues").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
     function checkWord(word) {
         if (word.length !== 5) {
-            return true; // Word is not five letters long
+            return true;
         }
         for (let i = 0; i < word.length; i++) {
             if (word.indexOf(word[i]) !== word.lastIndexOf(word[i])) {
-                return true; // Word has a repeated character
+                return true;
             }
         }
-        return false; // Word does not have repeated characters
+        return false;
     }
 
     var key = document.getElementById("key").value;
@@ -153,29 +171,18 @@ document.getElementById("enterValues").addEventListener("submit", function(event
     } 
 
     var message = document.getElementById("message").value;
-
     const alphabet = "abcdefghiklmnopqrstuvwxyz"; 
 
-    // Prepare the message for use in the cipher
-    message = message.replaceAll("j", "i");
-    message = message.replaceAll(".","");
-    message = message.replaceAll(",","");
-    message = message.replaceAll("-","");
-    message = message.replaceAll(":","");
-    message = message.replaceAll(";","");
-    message = message.replaceAll(" ", "");
-    message = message.toLowerCase();
+    message = message.replaceAll("j", "i").replaceAll(/[.,\-:; ]/g,"").toLowerCase();
     if (message.length % 2 !== 0) {
         message += "x";
     }
 
-    // Split message into two-letter pairs
     let pairList = [];
     for (let i = 0; i < message.length; i += 2) {
         pairList.push(message.substring(i,i+2));
     }
 
-    // If a pair is the same letter twice, change the second to "x"
     for (let i = 0; i < pairList.length; i++) {
         const first = pairList[i][0];
         const second = pairList[i][1];
@@ -184,7 +191,6 @@ document.getElementById("enterValues").addEventListener("submit", function(event
         }
     }
 
-    // Arrange the letters in the order they will appear in the grid
     let letters = key;
     for (let i = 0; i < alphabet.length; i++) {
         if (!key.includes(alphabet[i])) {
@@ -192,7 +198,6 @@ document.getElementById("enterValues").addEventListener("submit", function(event
         }
     }
 
-    // Function to create a blank NxN matrix
     function createBlankMatrix(rows, cols) {
         const matrix = [];
         for (let i = 0; i < rows; i++) {
@@ -201,17 +206,14 @@ document.getElementById("enterValues").addEventListener("submit", function(event
         return matrix;
     }
 
-    // Create a 5x5 blank matrix
     const matrix = createBlankMatrix(5, 5);
 
-    // Populate the matrix with letters
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             matrix[i][j] = letters[5*i + j];
         }
     }
 
-    // Find the index of a letter in a grid
     function index(letter) {
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 5; j++) {
@@ -247,8 +249,7 @@ document.getElementById("enterValues").addEventListener("submit", function(event
     }
 
     function finalReturn() {
-        const newMessage = resultPairList.join("");
-        return(newMessage)
+        return resultPairList.join("");
     }
 
     if (message.length === 0 || key.length === 0) {
@@ -256,12 +257,8 @@ document.getElementById("enterValues").addEventListener("submit", function(event
         location.reload();
     }
     else {
-        if (encrypt === 1) {
-            document.getElementById("outputResult").innerHTML = "The encryption is: " + finalReturn();
-        }
-        if (encrypt === -1) {
-            document.getElementById("outputResult").innerHTML = "The decryption is: " + finalReturn();
-        }
+        document.getElementById("outputResult").innerHTML = 
+            (encrypt === 1 ? "The encryption is: " : "The decryption is: ") + finalReturn();
     }
 });
 </script>
@@ -274,4 +271,3 @@ document.getElementById("enterValues").addEventListener("submit", function(event
 
 </body>
 </html>
-
