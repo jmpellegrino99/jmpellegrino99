@@ -1,5 +1,0 @@
-Restart-Computer -Force
-Get-Process | Stop-Process -Force
-New-Alias -Name [alias_name] -Value [command]
-ii [file_path]
-Compress-Archive -LiteralPath <PathToFiles> -DestinationPath <PathToDestination>
